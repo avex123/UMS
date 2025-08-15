@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Cutting Lists</h2>
+        <a href="{% url 'cutting_list_create' %}" class="btn btn-danger shadow-sm">
+            ➕ New Cutting List
+        </a>
+    </div>
+
+    {% if cutting_lists %}
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Created By</th>
+                    <th>Date</th>
+                    <th>Total Used (m)</th>
+                    <th>Total Waste (mm)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cl in cutting_lists %}
+                <tr>
+                    <td>{{ cl.name }}</td>
+                    <td>{{ cl.created_by.username }}</td>
+                    <td>{{ cl.created_at|date:'d M Y H:i' }}</td>
+                    <td>
+                        {{ cl.total_used|floatformat:2 }} mm
+                    </td>
+                    <td>
+                        {{ cl.total_waste|floatformat:2 }} mm 
+                    </td>
+                    <td>
+                        <a href="{% url 'cutting_list_detail' cl.pk %}" class="btn btn-outline-secondary btn-sm">
+                            🔎 View
+                        </a>
+                        <a href="{% url 'cutting_list_pdf' cl.pk %}" class="btn btn-outline-danger btn-sm">
+                            🖨 PDF
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-light border shadow-sm">
+        No cutting lists found. Click “New Cutting List” to get started.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

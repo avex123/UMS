@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>📄 Invoices</h2>
+    <a href="{% url 'invoice_create' %}" class="btn btn-success mb-3">➕ Add New Invoice</a>
+    {% if invoices %}
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Project</th>
+                <th>Category</th>
+                <th>Date Received</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.id }}</td>
+                <td>{{ invoice.project.name }}</td>
+                <td>{{ invoice.get_category_display }}</td>
+                <td>{{ invoice.date_received }}</td>
+                <td>
+                    <a href="{% url 'invoice_detail' invoice.id %}" class="btn btn-primary btn-sm">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info">No invoices available.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Upload File for {{ project.name }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        {{ form.file.label_tag }} {{ form.file }}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label_tag }} {{ form.description }}
+    </div>
+    <div class="mb-3">
+        {{ form.file_type.label_tag }} {{ form.file_type }}
+    </div>
+    <button type="submit" class="btn btn-danger">Upload</button>
+    <a href="{% url 'project_detail' project.pk %}" class="btn btn-secondary">Back</a>
+</form>
+{% endblock %}

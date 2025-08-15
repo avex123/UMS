@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width:900px;">
+  <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+    <div class="card-body p-4">
+      <div class="d-flex align-items-start gap-3">
+        <div class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:56px;height:56px;background:#fdecea;">
+          <span class="fs-4" style="color:#dc3545;">🔒</span>
+        </div>
+        <div class="flex-grow-1">
+          <h3 class="fw-bold mb-1">Access restricted</h3>
+          <p class="text-muted mb-3">
+            You have not been granted access to view this content.
+          </p>
+
+          {# Optional developer hint when available #}
+          {% if denied_perms %}
+            <div class="alert alert-light border small mb-3">
+              <div class="fw-semibold mb-1">Details (for admins):</div>
+              <code>{{ denied_perms|join:", " }}</code>
+            </div>
+          {% endif %}
+
+          <div class="d-flex flex-wrap gap-2">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">Go Back</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-danger btn-sm">Return to Dashboard</a>
+          </div>
+          <hr class="my-4">
+          <p class="small text-muted mb-0">
+            If you believe this is a mistake, please contact an administrator to request access.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

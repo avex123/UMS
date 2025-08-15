@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h3 class="fw-bold text-danger">{{ task.name }}</h3>
+            <p class="text-muted mb-3">{{ task.description|default:"No description provided." }}</p>
+
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">
+                    <strong>Project:</strong> {{ task.project.name }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Assigned To:</strong> {{ task.assigned_to }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Status:</strong> {{ task.status }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Due Date:</strong> {{ task.due_date }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Progress:</strong> {{ task.progress }}%
+                </li>
+                {% if task.task_file %}
+                <li class="list-group-item">
+                    <strong>Attached File:</strong> 
+                    <a href="{{ task.task_file.url }}" class="btn btn-outline-secondary btn-sm" target="_blank">📎 View File</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'task_dashboard' %}" class="btn btn-outline-secondary shadow-sm">
+                    🔙 Back to Tasks
+                </a>
+                {% if task.status != 'Completed' %}
+                <a href="#" class="btn btn-success shadow-sm">
+                    ✅ Mark as Completed
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">Add Inventory Item</h2>
+
+    <div class="card shadow-sm border-0 p-3" style="border-top: 3px solid #dc3545; border-radius: 12px;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+                {{ form.material.label_tag }}
+                {{ form.material }}
+            </div>
+            <div class="mb-3">
+                {{ form.stock_type.label_tag }}
+                {{ form.stock_type }}
+            </div>
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                {{ form.length.label_tag }}
+                {{ form.length }}
+            </div>
+            <div class="mb-3">
+                {{ form.quantity.label_tag }}
+                {{ form.quantity }}
+            </div>
+            <button type="submit" class="btn btn-danger shadow-sm w-100">➕ Add to Inventory</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

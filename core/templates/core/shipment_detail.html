@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h4 class="fw-bold text-danger">{{ shipment.reference_number }}</h4>
+            <p class="text-muted">{{ shipment.get_direction_display }} shipment</p>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Customer/Supplier:</strong> {{ shipment.customer_or_supplier }}</li>
+                <li class="list-group-item"><strong>Status:</strong> {{ shipment.get_status_display }}</li>
+                <li class="list-group-item"><strong>Ship Date:</strong> {{ shipment.ship_date|date:"M d, Y" }}</li>
+                <li class="list-group-item"><strong>Expected Arrival:</strong> {{ shipment.expected_arrival|date:"M d, Y" }}</li>
+                <li class="list-group-item"><strong>Tracking #:</strong> {{ shipment.tracking_number|default:"N/A" }}</li>
+                <li class="list-group-item"><strong>Notes:</strong> {{ shipment.notes|default:"No notes." }}</li>
+                {% if shipment.document %}
+                    <li class="list-group-item">
+                        <a href="{{ shipment.document.url }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                            📎 View Document
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <h5 class="fw-bold mt-4 text-danger">Items in Shipment</h5>
+            {% if shipment.items.all %}
+            <ul class="list-group list-group-flush">
+                {% for item in shipment.items.all %}
+                <li class="list-group-item">
+                    {{ item.description }} - {{ item.quantity }} {{ item.unit }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p class="text-muted">No items added for this shipment.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

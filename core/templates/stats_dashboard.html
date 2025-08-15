@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>📊 Business Intelligence Dashboard</h2>
+    <div class="row my-4">
+        <div class="col-md-4">
+            <div class="card text-bg-success shadow">
+                <div class="card-body">
+                    <h5>Total Income</h5>
+                    <h3>${{ total_income }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-danger shadow">
+                <div class="card-body">
+                    <h5>Total Expenses</h5>
+                    <h3>${{ total_expenses }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-primary shadow">
+                <div class="card-body">
+                    <h5>Profit</h5>
+                    <h3>${{ profit }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row my-4">
+        <div class="col-md-6">
+            <canvas id="incomeChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Worker Efficiency -->
+    <h4>⚡ Worker Efficiency</h4>
+    <table class="table table-striped shadow-sm">
+        <thead>
+            <tr>
+                <th>Worker</th>
+                <th>Completed Tasks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for worker in worker_efficiency %}
+            <tr>
+                <td>{{ worker.username }}</td>
+                <td>{{ worker.completed }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">No worker data yet</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Low Stock Items -->
+    <h4>📦 Material Shortages</h4>
+    <table class="table table-bordered shadow-sm">
+        <thead class="table-danger">
+            <tr>
+                <th>Material</th>
+                <th>Current Qty</th>
+                <th>Min Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in low_stock_items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.minimum_stock }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">✅ All materials sufficiently stocked</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const incomeData = {
+        labels: [{% for i in income_data %}"{{ i.date }}",{% endfor %}],
+        datasets: [{
+            label: 'Income',
+            backgroundColor: 'green',
+            borderColor: 'green',
+            data: [{% for i in income_data %}{{ i.total }},{% endfor %}],
+        }]
+    };
+    const expenseData = {
+        labels: [{% for e in expense_data %}"{{ e.date }}",{% endfor %}],
+        datasets: [{
+            label: 'Expenses',
+            backgroundColor: 'red',
+            borderColor: 'red',
+            data: [{% for e in expense_data %}{{ e.total }},{% endfor %}],
+        }]
+    };
+
+    const configIncome = { type: 'line', data: incomeData };
+    const configExpense = { type: 'line', data: expenseData };
+
+    new Chart(document.getElementById('incomeChart'), configIncome);
+    new Chart(document.getElementById('expenseChart'), configExpense);
+</script>
+{% endblock %}

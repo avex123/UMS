@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h4 class="fw-bold text-danger mb-4">➕ Add New Quote</h4>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <h5 class="mt-4">Quote Items</h5>
+                {{ formset.management_form }}
+                <div id="quote-items">
+                    {% for form in formset %}
+                        <div class="border rounded p-3 mb-2">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-danger mt-3">💾 Save Quote</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

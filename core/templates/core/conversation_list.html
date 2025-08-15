@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="fw-bold mb-3">Your Conversations</h2>
+<ul class="list-group">
+  {% for convo in conversations %}
+    <li class="list-group-item">
+      <a href="{% url 'conversation_detail' convo.id %}">
+        {{ convo.name|default:"Private Chat" }}
+      </a>
+    </li>
+  {% empty %}
+    <li class="list-group-item">No conversations yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

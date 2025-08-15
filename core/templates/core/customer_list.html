@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-danger">👥 Customers</h2>
+        <a href="{% url 'customer_create' %}" class="btn btn-danger shadow-sm">
+            ➕ Add New Customer
+        </a>
+    </div>
+
+    <!-- Total Customers -->
+    <p class="text-muted small mb-4">
+        Total customers: <strong>{{ customers|length }}</strong>
+    </p>
+
+    <!-- Customer Cards -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for customer in customers %}
+        <div class="col">
+            <div class="card shadow-sm border-0 h-100" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+                <div class="card-body">
+                    <h5 class="fw-semibold mb-2">
+                        <a href="{% url 'customer_detail' customer.pk %}" class="text-decoration-none text-dark">
+                            {{ customer.name }}
+                        </a>
+                    </h5>
+                    <p class="mb-1 text-muted small"><strong>Email:</strong> {{ customer.email|default:"—" }}</p>
+                    <p class="mb-1 text-muted small"><strong>Phone:</strong> {{ customer.phone|default:"—" }}</p>
+                    <p class="mb-3 text-muted small"><strong>Company:</strong> {{ customer.company_name|default:"—" }}</p>
+                    
+                    <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-outline-danger btn-sm w-100">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-light border shadow-sm w-100 text-center">
+            No customers found.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

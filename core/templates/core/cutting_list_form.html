@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h4 class="fw-bold text-danger mb-4">➕ New Cutting List</h4>
+
+            <form method="POST" id="cuttingListForm" class="p-3">
+                {% csrf_token %}
+
+                <!-- Cutting List Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.name.label }}</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+
+                <h5 class="fw-semibold mt-4 text-secondary">✂ Materials and Cut Details</h5>
+
+                <div id="formset-container">
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="row g-3 align-items-end border rounded p-3 mb-3 form-row">
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">{{ form.inventory_item.label }}</label>
+                                {{ form.inventory_item|add_class:"form-select" }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">{{ form.cut_length.label }}</label>
+                                {{ form.cut_length|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">{{ form.quantity.label }}</label>
+                                {{ form.quantity|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-outline-danger remove-row mt-4">🗑️ Remove</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" id="addRowBtn" class="btn btn-outline-secondary mb-3">
+                    ➕ Add Material
+                </button>
+
+                <button type="submit" class="btn btn-danger mt-3">💾 Save Cutting List</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const formsetContainer = document.getElementById('formset-container');
+    const addRowBtn = document.getElementById('addRowBtn');
+    let totalForms = document.getElementById('id_form-TOTAL_FORMS');
+
+    addRowBtn.addEventListener('click', () => {
+        const currentFormCount = parseInt(totalForms.value);
+        const newFormHtml = formsetContainer.querySelector('.form-row').outerHTML.replace(
+            new RegExp(`form-(\\d+)`, 'g'),
+            `form-${currentFormCount}`
+        );
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newFormHtml;
+        tempDiv.querySelectorAll('input, select').forEach(input => {
+            input.value = '';
+        });
+        formsetContainer.appendChild(tempDiv.firstChild);
+        totalForms.value = currentFormCount + 1;
+    });
+
+    formsetContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-row')) {
+            const formRows = formsetContainer.querySelectorAll('.form-row');
+            if (formRows.length > 1) {
+                e.target.closest('.form-row').remove();
+                totalForms.value = parseInt(totalForms.value) - 1;
+            } else {
+                alert('You must have at least one row.');
+            }
+        }
+    });
+</script>
+{% endblock %}

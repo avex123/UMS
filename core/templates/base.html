@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UMS ERP System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="{% static 'core/styles.css' %}" rel="stylesheet">
+
+    <style>
+        body {
+            background: url("{% static 'core/images/dashboard_bg.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+        }
+
+        /* Sidebar with lighter overlay and brighter contrast */
+        .sidebar {
+            height: 100vh;
+            background: url("{% static 'core/images/sidebar.png' %}") no-repeat center center;
+            background-size: cover;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            padding: 1.5rem 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.51);
+            border-right: 1px solid rgba(39, 39, 39, 0.32);
+        }
+
+        .sidebar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(122, 3, 3, 0.36); /* lighter overlay for sidebar */
+            z-index: 1;
+        }
+
+        .sidebar .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .sidebar .logo img {
+            width: 160px;
+            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.7));
+        }
+
+        .sidebar .nav-link {
+            color: #f0f0f0;
+            font-weight: 500;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background-color 0.25s ease, color 0.25s;
+            z-index: 2;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link span.icon {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.08); /* more subtle frosted-glass effect */
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(6px);
+            min-height: 95vh;
+        }
+
+        /* Light overlay for sharper background */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.55);
+            z-index: -1;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+                position: relative;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 col-12 sidebar">
+            <div class="logo">
+                <img src="{% static 'core/images/uzun_color_black-removebg-200.png' %}" alt="UMS Logo">
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'dashboard' %}">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'projects' in request.path %}active{% endif %}" href="{% url 'project_list' %}">
+                        Projects
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'customers' in request.path %}active{% endif %}" href="{% url 'customer_list' %}">
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'inventory' in request.path %}active{% endif %}" href="{% url 'inventory_list' %}">
+                        Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'tasks' in request.path %}active{% endif %}" href="{% url 'task_dashboard' %}">
+                        Tasks
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'cutting-lists' in request.path %}active{% endif %}" href="{% url 'cutting_list_dashboard' %}">
+                        Cutting List
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'invoices' in request.path %}active{% endif %}" href="{% url 'invoice_dashboard' %}">
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'quotes' in request.path %}active{% endif %}" href="{% url 'quote_dashboard' %}">
+                        Quotes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'stats' in request.path %}active{% endif %}" href="{% url 'stats_dashboard' %}">
+                        Statistics
+                    </a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_list' %}">Users</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link {% if 'shipping' in request.path %}active{% endif %}" href="{% url 'shipping_dashboard' %}">Shipping</a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+               
+            </ul>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-10 col-12 content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+</body>
+</html>

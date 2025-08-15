@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-danger">{{ cutting_list.name }}</h2>
+        <a href="{% url 'cutting_list_pdf' cutting_list.pk %}" class="btn btn-outline-danger">
+            🖨 Export to PDF
+        </a>
+    </div>
+
+    <p class="text-muted mb-2">
+        <strong>Created by:</strong> {{ cutting_list.created_by.username }}<br>
+        <strong>Date:</strong> {{ cutting_list.created_at|date:'d M Y H:i' }}
+    </p>
+
+    <!-- Summary -->
+    <div class="alert alert-light border shadow-sm">
+        <strong>Summary:</strong><br>
+        Total Materials Used: 
+        {{ cutting_list.entries.all|map:'total_length_used'|sum|floatformat:2 }} mm<br>
+        Total Waste: 
+        {{ cutting_list.entries.all|map:'waste'|sum|floatformat:2 }} mm
+    </div>
+
+    <!-- Table of Cuts -->
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-bordered shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Material</th>
+                    <th>Cut Length (mm)</th>
+                    <th>Quantity</th>
+                    <th>Total Length Used (mm)</th>
+                    <th>Waste (mm)</th>
+                    <th>Remaining Stock (m)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in cutting_list.entries.all %}
+                <tr>
+                    <td>{{ entry.inventory_item.name }}</td>
+                    <td>{{ entry.cut_length }}</td>
+                    <td>{{ entry.quantity }}</td>
+                    <td>{{ entry.total_length_used }}</td>
+                    <td>{{ entry.waste }}</td>
+                    <td>{{ entry.inventory_item.length|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

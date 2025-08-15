@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">➕ Add New Project</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label fw-bold">Project Name</label>
+                            {{ form.name|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label fw-bold">Description</label>
+                            {{ form.description|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Start Date -->
+                        <div class="mb-3">
+                            <label for="id_start_date" class="form-label fw-bold">Start Date</label>
+                            {{ form.start_date|add_class:"form-control" }}
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="mb-3">
+                            <label for="id_end_date" class="form-label fw-bold">End Date</label>
+                            {{ form.end_date|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Division -->
+                        <div class="mb-3">
+                            <label for="id_division" class="form-label fw-bold">Division</label>
+                            {{ form.division|add_class:"form-select" }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'project_list' %}" class="btn btn-secondary">← Back</a>
+                            <button type="submit" class="btn btn-danger">💾 Save Project</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

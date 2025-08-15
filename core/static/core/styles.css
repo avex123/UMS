@@ -1,0 +1,83 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #000000 !important;
+}
+
+.navbar .navbar-brand {
+    color: #ff0000 !important; /* Red text */
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+.btn-success {
+    background-color: #d40000;
+    border-color: #d40000;
+}
+
+.btn-outline-danger {
+    color: #d40000;
+    border-color: #d40000;
+}
+
+.btn-outline-danger:hover {
+    background-color: #d40000;
+    color: #fff;
+}
+
+.card {
+    border-left: 4px solid #ff0000;
+}
+
+.sidebar {
+    min-height: 100vh;
+    padding-top: 20px;
+    border-right: 1px solid #333;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #ccc;
+    padding: 10px 20px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #1a1a1a;
+    color: #ff0000;
+}
+
+.sidebar .nav-link.active {
+    background-color: #ff0000;
+    color: white;
+}
+
+.sidebar .disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#sidebar .nav-link {
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+#sidebar .nav-link.active {
+    background-color: #b52a34;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #c73a44;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s ease-in-out;
+}

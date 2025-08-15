@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quote #{{ quote.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h2 { color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f8f9fa; }
+        .text-end { text-align: right; }
+    </style>
+</head>
+<body>
+    <h2>Quote #{{ quote.id }}</h2>
+    <p><strong>Customer:</strong> {{ quote.customer.name }}</p>
+    <p><strong>Project:</strong> {{ quote.project_name }}</p>
+    <p><strong>Date:</strong> {{ quote.date_created|date:"d M Y" }}</p>
+
+    <h3>Items</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Unit Price (€)</th>
+                <th>Total (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in quote.items.all %}
+            <tr>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>€{{ item.unit_price|floatformat:2 }}</td>
+                <td>€{{ item.total_price|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="text-end">Total: €{{ quote.total_cost|floatformat:2 }}</h3>
+</body>
+</html>

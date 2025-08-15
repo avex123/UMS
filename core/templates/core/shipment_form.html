@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h4 class="fw-bold text-danger mb-4">➕ Add New Shipment</h4>
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Shipment Type -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Type</label>
+                    {{ form.shipment_type }}
+                </div>
+
+                <!-- Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Name</label>
+                    {{ form.name }}
+                </div>
+
+                <!-- Tracking Number -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Tracking Number</label>
+                    {{ form.tracking_number }}
+                </div>
+
+                <!-- Expected Date -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Expected Date</label>
+                    {{ form.expected_date }}
+                </div>
+
+                <!-- Status -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Status</label>
+                    {{ form.status }}
+                </div>
+
+                <!-- Notes -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Notes</label>
+                    {{ form.notes }}
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100">💾 Save Shipment</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

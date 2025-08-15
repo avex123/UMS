@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load form_extras %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+        <div class="card-body">
+            <h4 class="fw-bold text-danger mb-4">➕ Add New Task</h4>
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Project Selector -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.project.label }}</label>
+                    {{ form.project|add_class:"form-select" }}
+                </div>
+
+                <!-- Task Name -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.name.label }}</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.description.label }}</label>
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+
+                <!-- Assigned To -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.assigned_to.label }}</label>
+                    {{ form.assigned_to|add_class:"form-select" }}
+                </div>
+
+                <!-- Due Date -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.due_date.label }}</label>
+                    {{ form.due_date|add_class:"form-control" }}
+                </div>
+
+                <!-- Status -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.status.label }}</label>
+                    {{ form.status|add_class:"form-select" }}
+                </div>
+
+                <!-- Progress -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.progress.label }}</label>
+                    {{ form.progress|add_class:"form-range" }}
+                    <small class="text-muted">Set progress (0–100%)</small>
+                </div>
+
+                <!-- File Upload -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ form.task_file.label }}</label>
+                    {{ form.task_file|add_class:"form-control" }}
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-danger shadow-sm">
+                        💾 Save Task
+                    </button>
+                    <a href="{% url 'task_dashboard' %}" class="btn btn-outline-secondary shadow-sm">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

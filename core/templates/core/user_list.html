@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+  <h2 class="fw-bold mb-1">Users</h2>
+  <p class="text-muted mb-3">Browse, search, select, and assign roles to users from the Django admin user base.</p>
+
+  <!-- Django messages -->
+  {% if messages %}
+    <div class="mb-3">
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} mb-2" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Filters -->
+  <form class="row g-2 mb-3" method="get">
+    <div class="col-sm-6 col-md-4">
+      <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search username, name, email">
+    </div>
+    <div class="col-sm-3 col-md-2">
+      <select name="status" class="form-select">
+        <option value="">All Statuses</option>
+        <option value="active" {% if status == 'active' %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Inactive</option>
+      </select>
+    </div>
+    <div class="col-sm-3 col-md-2">
+      <select name="staff" class="form-select">
+        <option value="">All Roles</option>
+        <option value="yes" {% if staff == 'yes' %}selected{% endif %}>Staff</option>
+        <option value="no" {% if staff == 'no' %}selected{% endif %}>Non-staff</option>
+      </select>
+    </div>
+    <div class="col-sm-12 col-md-4 d-flex gap-2">
+      <button class="btn btn-danger">Filter</button>
+      <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Reset</a>
+    </div>
+  </form>
+
+  <div class="card shadow-sm border-0" style="border-top: 4px solid #dc3545; border-radius: 12px;">
+    <div class="card-body">
+
+      <!-- Toggle button for Assign Role form -->
+      <button type="button" class="btn btn-outline-danger mb-3" id="toggleAssignRoleBtn">
+        Assign Role
+      </button>
+
+      <!-- Bulk Assign Role (hidden by default) -->
+      <div id="assignRoleContainer" style="display:none;">
+        <form id="assignRoleForm" class="row g-2 align-items-end mb-3" method="post" action="{% url 'assign_role' %}">
+          {% csrf_token %}
+          <div class="col-sm-6 col-md-4">
+            <label class="form-label small text-muted mb-1">Assign role to selected</label>
+            <select name="role" class="form-select" required>
+              <option value="" selected disabled>Choose role…</option>
+              {% for value,label in role_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-sm-6 col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Assign Role</button>
+            <button type="button" class="btn btn-outline-secondary" id="clearSelectionBtn">Clear Selection</button>
+          </div>
+          <!-- Hidden inputs for selected user IDs will be injected here -->
+          <div id="assignHiddenInputs"></div>
+        </form>
+      </div>
+
+      <!-- Bulk helpers -->
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-danger btn-sm" type="button" id="selectAllBtn">Select All</button>
+          <button class="btn btn-outline-secondary btn-sm" type="button" id="clearAllBtn">Clear</button>
+        </div>
+        <div class="text-muted small">Click a row to toggle details.</div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th style="width:36px;">
+                <input type="checkbox" id="checkAll">
+              </th>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Staff</th>
+              <th>Active</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for u in users %}
+            <tr class="user-row" data-bs-toggle="collapse" data-bs-target="#details-{{ u.id }}" style="cursor:pointer;">
+              <td>
+                <input type="checkbox" class="row-check" value="{{ u.id }}" onclick="event.stopPropagation();">
+              </td>
+              <td>{{ u.username }}</td>
+              <td>{{ u.first_name }} {{ u.last_name }}</td>
+              <td>{{ u.email }}</td>
+              <td>
+                {% if u.is_staff %}
+                  <span class="badge text-bg-dark">Staff</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">User</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if u.is_active %}
+                  <span class="badge text-bg-success">Active</span>
+                {% else %}
+                  <span class="badge text-bg-danger">Inactive</span>
+                {% endif %}
+              </td>
+              <td>{{ u.role_display }}</td>
+            </tr>
+            <tr class="collapse" id="details-{{ u.id }}">
+              <td colspan="7">
+                <div class="border rounded p-3">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="small text-muted">Joined</div>
+                      <div>{{ u.date_joined }}</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="small text-muted">Last login</div>
+                      <div>{{ u.last_login }}</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="small text-muted">Superuser</div>
+                      <div>
+                        {% if u.is_superuser %}
+                          <span class="badge text-bg-warning">Yes</span>
+                        {% else %}
+                          <span class="badge text-bg-light">No</span>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    {% if u.role_display %}
+                    <div class="col-md-12">
+                      <div class="small text-muted">Role</div>
+                      <div class="fw-semibold">{{ u.role_display }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="col-12">
+                      <a href="{% url 'admin:auth_user_change' u.id %}" class="btn btn-outline-danger btn-sm" target="_blank">
+                        Open in Admin
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Check-all behavior
+  const checkAll = document.getElementById('checkAll');
+  const selectAllBtn = document.getElementById('selectAllBtn');
+  const clearAllBtn = document.getElementById('clearAllBtn');
+
+  function setAll(val){
+    document.querySelectorAll('.row-check').forEach(cb => cb.checked = val);
+    if (checkAll) checkAll.checked = val;
+    rebuildHiddenInputs();
+  }
+  if (checkAll){
+    checkAll.addEventListener('change', () => setAll(checkAll.checked));
+  }
+  if (selectAllBtn){
+    selectAllBtn.addEventListener('click', () => setAll(true));
+  }
+  if (clearAllBtn){
+    clearAllBtn.addEventListener('click', () => setAll(false));
+  }
+
+  // Row click—don’t toggle checkbox accidentally; toggle collapse
+  document.querySelectorAll('.user-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target && (target.tagName === 'INPUT' || target.closest('a'))) return;
+      const sel = row.getAttribute('data-bs-target');
+      const el = document.querySelector(sel);
+      if (el){
+        new bootstrap.Collapse(el, { toggle: true });
+      }
+    });
+  });
+
+  // Toggle Assign Role form visibility
+  const toggleAssignRoleBtn = document.getElementById('toggleAssignRoleBtn');
+  const assignRoleContainer = document.getElementById('assignRoleContainer');
+
+  if (toggleAssignRoleBtn && assignRoleContainer) {
+    toggleAssignRoleBtn.addEventListener('click', () => {
+      const isVisible = assignRoleContainer.style.display !== 'none';
+      assignRoleContainer.style.display = isVisible ? 'none' : 'block';
+    });
+  }
+
+  // Bulk assign role form wiring
+  const hiddenWrap = document.getElementById('assignHiddenInputs');
+  const form = document.getElementById('assignRoleForm');
+  const clearSelBtn = document.getElementById('clearSelectionBtn');
+
+  function getSelectedIds(){
+    const ids = [];
+    document.querySelectorAll('.row-check:checked').forEach(cb => ids.push(cb.value));
+    return ids;
+  }
+
+  function rebuildHiddenInputs() {
+    if (!hiddenWrap) return;
+    hiddenWrap.innerHTML = '';
+    getSelectedIds().forEach(id => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'user_ids';
+      input.value = id;
+      hiddenWrap.appendChild(input);
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      rebuildHiddenInputs();
+      const ids = getSelectedIds();
+      if (!ids.length) {
+        e.preventDefault();
+        alert('Please select at least one user.');
+      }
+    });
+  }
+
+  if (clearSelBtn) {
+    clearSelBtn.addEventListener('click', () => setAll(false));
+  }
+
+  // Keep hidden inputs in sync when toggling checkboxes
+  document.querySelectorAll('.row-check').forEach(cb => {
+    cb.addEventListener('change', rebuildHiddenInputs);
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Quotes</h2>
+    <a href="{% url 'quote_create' %}" class="btn btn-danger shadow-sm">
+        ➕ Add New Quote
+    </a>
+</div>
+
+{% if quotes %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Project Name</th>
+                <th>Status</th>
+                <th>Total (€)</th>
+                <th>Date Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quote in quotes %}
+            <tr>
+                <td>#{{ quote.id }}</td>
+                <td>{{ quote.customer.name }}</td>
+                <td>{{ quote.project_name }}</td>
+                <td>
+                    <span class="badge
+                        {% if quote.status == 'Accepted' %} bg-success
+                        {% elif quote.status == 'Rejected' %} bg-danger
+                        {% elif quote.status == 'Sent' %} bg-warning
+                        {% else %} bg-secondary {% endif %}">
+                        {{ quote.status }}
+                    </span>
+                </td>
+                <td>€{{ quote.total_cost|floatformat:2 }}</td>
+                <td>{{ quote.date_created|date:"d M Y" }}</td>
+                <td>
+                    <a href="{% url 'quote_detail' quote.pk %}" class="btn btn-sm btn-outline-danger">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-light border">No quotes found.</div>
+{% endif %}
+{% endblock %}

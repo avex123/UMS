@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>➕ Add Invoice</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <h4>🧱 Materials on Invoice</h4>
+        {{ formset.management_form }}
+        {% for subform in formset %}
+            <div class="card p-3 mb-2">
+                {{ subform.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Save Invoice</button>
+    </form>
+</div>
+{% endblock %}
