@@ -1,0 +1,68 @@
+# Database files - NEVER commit these!
+*.sqlite3
+db.sqlite3
+db_*.sqlite3
+*.db
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Media files (uploaded content)
+media/
+!media/.gitkeep
+
+# Static files (generated)
+staticfiles/
+!staticfiles/.gitkeep
+
+# Local configuration files
+.env
+local_settings.py
+
+# Log files
+*.log
+
+# Backup files
+*.backup
+*.bak
+*_backup.*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Migration backup files
+*_backup_*.json
+recovered_*.json
+missing_*.json
+projects_backup.json
+
+# Development scripts
+check_*.py
+compare_*.py
+fix_*.py
+test_*.py
+recover_*.py
+*.sh
+
+# Cache directories
+node_modules/
+.cache/
