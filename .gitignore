@@ -63,6 +63,11 @@ test_*.py
 recover_*.py
 *.sh
 
+# Allow deployment scripts
+!quick_server_update.sh
+!server_update.sh
+!dev_safety_check.sh
+
 # Cache directories
 node_modules/
 .cache/
